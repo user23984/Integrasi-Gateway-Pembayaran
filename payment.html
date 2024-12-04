@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gateway Pembayaran</title>
+    <style>
+        body{
+        height: 100%;
+        margin: 150px;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(to right, #9ad5e6, #0072ff);
+        font-family: 'Arial', sans-serif;
+        }
+
+        .judul{
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+        }
+        .container{
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wrapper{
+            justify-content: center;
+            border: 5px solid #ffffff; 
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            background-color: #ffffff;
+            border-radius: 10px;
+            width: 460px; 
+            box-shadow: 0 10 30px rgba(0, 0, 0, 0.2); 
+            backdrop-filter: blur(10px);
+        }
+
+        .wrapper2{
+            display: flex;
+            justify-content: space-between;
+        }
+        .isi{
+            justify-content: space-between;
+        }
+
+        button {
+            display: block; 
+            margin: auto; 
+            padding: 10px 20px;
+            background-color: #0072ff;
+            color: white; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer; 
+        }
+
+        .message {
+            display: none;
+            background-color: #4CAF50; 
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        button:hover {
+            background-color: #005bb5; 
+        }
+    </style>
+    <script>
+        function paymentSuccess() {
+            const message = document.getElementById('successMessage');
+            message.style.display = 'block';
+    
+            const button = document.querySelector('button');
+            button.style.display = 'none';
+
+            const backButton = document.getElementById('backButton');
+            backButton.style.display = 'inline-block'; 
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="judul">Payment</h1>
+        <div class="wrapper">
+            <div class="wrapper2">
+                <div>
+                    <p>ID</p>
+                    <p>Tanggal</p>
+                    <p>Total</p>
+                </div>
+    
+                <div>
+                    <p>php</p>
+                    <p>php</p>
+                    <p>php</p>
+                </div>
+            </div>
+            <button onclick="paymentSuccess()">Bayar</button>
+
+            <div class="message" id="successMessage">
+                Pembayaran Anda Berhasil!
+            </div>
+
+            <button class="back-button" id="backButton" onclick="goToCart()">Kembali ke Keranjang</button>
+
+        </div>
+    </div>
+</body>
+
+</html>
