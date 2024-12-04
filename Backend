@@ -1,0 +1,67 @@
+<?php
+include "conn.php";
+
+// Disable error reporting
+error_reporting(0);
+ini_set('display_errors', 0);
+
+$response = [];
+
+// Check if there's a task in the queue with 'pending' status
+$query = $mysqli->query("SELECT id, total_harga FROM pembayaran WHERE status1 = 'pending' ORDER BY id ASC LIMIT 1");
+
+if (!$query) {
+    $response['error'] = 'Queue query failed: ' . mysqli_error($mysqli);
+    echo json_encode($response);
+    exit;
+}
+
+if ($row = $query->fetch_assoc()) {
+    // Check if there is any task already processing
+    $checkProcessing = $mysqli->query("SELECT COUNT(*) FROM pembayaran WHERE status1 = 'processing'");
+
+    if (!$checkProcessing) {
+        $response['error'] = 'Check processing status failed: ' . mysqli_error($mysqli);
+        echo json_encode($response);
+        exit;
+    }
+
+    $processingCount = $checkProcessing->fetch_row()[0];
+
+    if ($processingCount > 0) {
+        // If there is a task already being processed, do nothing
+        $response['message'] = "A task is already being processed. Please wait until it's done.";
+        echo json_encode($response);
+        exit;
+    }
+
+    // Change status to 'processing'
+    $update = $mysqli->query("UPDATE pembayaran SET status1 = 'processing' WHERE id = {$row['id']}");
+
+    if (!$update) {
+        $response['error'] = 'Failed to update status to processing: ' . mysqli_error($mysqli);
+        echo json_encode($response);
+        exit;
+    }
+
+    // Process the task (simulated with sleep)
+    // Simulate task processing time (you can replace this with your actual processing code)
+    sleep(5); // Simulating some processing time
+
+    // After processing, mark the task as 'done'
+    $updateDone = $mysqli->query("UPDATE pembayaran SET status1 = 'done' WHERE id = {$row['id']}");
+
+    if ($updateDone) {
+        $response['message'] = "Task ID {$row['id']} is now done.";
+        $response['data'] = $row;
+    } else {
+        $response['error'] = 'Failed to mark as done: ' . mysqli_error($mysqli);
+    }
+} else {
+    $response['message'] = "No pending tasks in the queue.";
+}
+
+// Header JSON dan kirim respons
+header('Content-Type: application/json');
+echo json_encode($response);
+?>
